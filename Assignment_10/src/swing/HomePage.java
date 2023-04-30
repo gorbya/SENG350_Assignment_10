@@ -29,10 +29,6 @@ public class HomePage {
 	private JFrame frmLibraryDesktopApp;
 	private JTextField txtSearch;
 
-	/**
-	 * Launch the application.
-	 * @throws IOException 
-	 */
 	public static void main(String[] args) throws IOException {
 		List<Book> listBooks = GetBookList();
 		EventQueue.invokeLater(new Runnable() {
@@ -47,24 +43,24 @@ public class HomePage {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 * @throws IOException 
-	 */
 	public HomePage() throws IOException {
 		initialize();
-		
-//		if (txtSearch.getText() == "lol") {
-//			txtSearch.setText("lmao");
-//		}
-			
-
 	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 * @throws IOException 
-	 */
+	
+	private void displaySearchResults(JLabel lblResultTitle, JLabel lblResultAuthor, JLabel lblResultIBSN,
+			JLabel lblResultYear, JLabel lblResultID, JLabel lblResultRating, Book chosenBook) {
+		if (chosenBook == null) {
+			txtSearch.setText("Book not Found");
+		} else {
+			lblResultTitle.setText(chosenBook.title);
+			lblResultAuthor.setText("Author: "+chosenBook.authors);
+			lblResultIBSN.setText("IBSN: " +chosenBook.ibsn);
+			lblResultYear.setText("Year: " +chosenBook.orginalPublicationYear);
+			lblResultID.setText("Book ID: " +chosenBook.id);
+			lblResultRating.setText("Rating: " +chosenBook.averageRating);
+		}
+	}
+	
 	public void initialize() throws IOException {
 		
 		frmLibraryDesktopApp = new JFrame();
@@ -192,42 +188,35 @@ public class HomePage {
 		lblResultRating.setBounds(20, 143, 160, 14);
 		panel_1.add(lblResultRating);
 		lblResultRating.setForeground(new Color(255, 255, 255));
-		btnBookIDSearch.addActionListener(new ActionListener() {
 
 			
+			//The actionPerformed method violates the Single Responsibility Principle and the Open/Closed Principle
+			
+			
+		btnBookIDSearch.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				//search with given key ***************************************************************
 				long timeNow1 = System.currentTimeMillis();
-
-				//Book chosenBook = searchBookID(Integer.parseInt(txtSearch.getText()), listBookClean);
-				//Binary Search
 				
 				Book chosenBook = searchBookIdLinear(txtSearch.getText(), listBookClean);
 				int chosenBookIDString = Integer.parseInt(chosenBook.id)-1;
-				//Linear Search
-				
-				
-				
+
 				for (int i = 0; i < 9; i++) {
 					Book newBook = listBookClean.get(chosenBookIDString + i);
 					displayList.add(newBook);
 				}
 				
-				if (chosenBook == null) {
-					txtSearch.setText("Book not Found");
-				} else {
-					lblResultTitle.setText(chosenBook.title);
-					lblResultAuthor.setText("Author: "+chosenBook.authors);
-					lblResultIBSN.setText("IBSN: " +chosenBook.ibsn);
-					lblResultYear.setText("Year: " +chosenBook.orginalPublicationYear);
-					lblResultID.setText("Book ID: " +chosenBook.id);
-					lblResultRating.setText("Rating: " +chosenBook.averageRating);
-				}
+				displaySearchResults(lblResultTitle, lblResultAuthor, lblResultIBSN, lblResultYear, lblResultID,
+						lblResultRating, chosenBook);
+				
 				long timeNow2 = System.currentTimeMillis();
 				
 				System.out.println(timeNow2 - timeNow1);
 			}
+
 		});
+		
 		btnBookIDSearch.setBounds(10, 469, 190, 23);
 		panel_10.add(btnBookIDSearch);
 		
